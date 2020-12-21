@@ -11,7 +11,7 @@
         <button @click="addName">Add</button>
         <ul>
             <li v-for="(nama,index) in name">
-                @{{ nama }}
+                @{{ nama.name }}
                 <button @click=editName(index)>Edit</button>
                 <button @click="removeName(index)">Hapus</button>
             </li>
@@ -19,13 +19,14 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
     <script>
         var app = new Vue({
             el: '#app',
             data: {
                 content: '',
                 edit: -1,
-                name: ['Muhammad iqbal mubarak', 'Ruby Prwanti', 'Faqih Muhammad']
+                name: []
             },
             methods: {
                 addName: function() {
@@ -45,6 +46,16 @@
                     this.content = this.name[index]
                     this.edit = index
                 }
+            },
+            mounted: function(){
+                // GET /someUrl
+                this.$http.get('/api/get_user').then(response => {
+
+                    let result = response.body.data
+                    this.name = result
+                    console.log(result);
+
+                });
             }
         })
     </script>
