@@ -26,7 +26,8 @@
             data: {
                 content: '',
                 edit: -1,
-                name: []
+                name: [],
+                length: 0
             },
             methods: {
                 addName: function() {
@@ -35,8 +36,11 @@
                         this.edit = -1
                         this.content = '';
                     } else {
-                        this.name.push(this.content),
-                        this.content = '';
+                        this.$http.post('/api/add_user', {name: this.content}).then(response => {
+                            this.length += 1,
+                            this.name.push({id: this.length, name: this.content}),
+                            this.content = ''
+                        })
                     }
                 },
                 removeName: function (index) {
@@ -53,6 +57,7 @@
 
                     let result = response.body.data
                     this.name = result
+                    this.length = result.length + 1
                     console.log(result);
 
                 });
