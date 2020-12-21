@@ -12,7 +12,7 @@
         <ul>
             <li v-for="(nama,index) in name">
                 @{{ nama.name }}
-                <button @click=editName(index)>Edit</button>
+                <button @click="editName(index)">Edit</button>
                 <button @click="removeName(index)">Hapus</button>
             </li>
         </ul>
@@ -32,8 +32,8 @@
             methods: {
                 addName: function() {
                     if (this.edit != -1){
-                        this.$http.post('/api/update_user', {index: this.edit, name: this.content}).then(response => {
-                            this.name[this.edit-1].name = this.content
+                        this.$http.post('/api/update_user', {index: this.edit+1, name: this.content}).then(response => {
+                            this.name[this.edit].name = this.content
                             this.edit = -1
                             this.content = '';
                         })
@@ -47,11 +47,13 @@
                     }
                 },
                 removeName: function (index) {
-                    this.name.splice(index, 1);  
+                    this.$http.post('/api/delete_user', {index: index}).then(response => {
+                        this.name.splice(index, 1);
+                    })
                 },
                 editName: function (index) {
                     this.content = this.name[index].name
-                    this.edit = index+1
+                    this.edit = index
                 }
             },
             mounted: function(){
