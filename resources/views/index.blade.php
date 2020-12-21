@@ -32,9 +32,12 @@
             methods: {
                 addName: function() {
                     if (this.edit != -1){
-                        this.name[this.edit] = this.content
-                        this.edit = -1
-                        this.content = '';
+                        this.$http.post('/api/update_user', {index: this.edit, name: this.content}).then(response => {
+                            this.name[this.edit-1].name = this.content
+                            this.edit = -1
+                            this.content = '';
+                        })
+                        
                     } else {
                         this.$http.post('/api/add_user', {name: this.content}).then(response => {
                             this.length += 1,
@@ -47,8 +50,8 @@
                     this.name.splice(index, 1);  
                 },
                 editName: function (index) {
-                    this.content = this.name[index]
-                    this.edit = index
+                    this.content = this.name[index].name
+                    this.edit = index+1
                 }
             },
             mounted: function(){
@@ -57,7 +60,7 @@
 
                     let result = response.body.data
                     this.name = result
-                    this.length = result.length + 1
+                    this.length = result.length
                     console.log(result);
 
                 });
